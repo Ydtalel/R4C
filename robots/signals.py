@@ -7,5 +7,15 @@ from .utils import send_robot_availability_email, send_robot_availability_email_
 @receiver(post_save, sender=Robot)
 def notify_customer_on_robot_availability(sender, instance, created, **kwargs):
     if instance.available:
-        # send_robot_availability_email(instance)
-        send_robot_availability_email_to_console(instance)
+        robot_data = {
+            'id': instance.id,
+            'model': instance.model,
+            'version': instance.version,
+            'created': instance.created,
+
+        }
+        send_robot_availability_email.delay(robot_data)
+#     if instance.available:
+#         send_robot_availability_email(instance)
+        # send_robot_availability_email_to_console(instance)
+

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'robots.apps.RobotsConfig',
     'rest_framework',
+    'celery',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -119,9 +121,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.mail.ru'
-# EMAIL_PORT = 465
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
 
 EMAIL_HOST_USER = os.environ.get('email_host')
 EMAIL_HOST_PASSWORD = os.environ.get('email_password')
@@ -131,6 +133,33 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_HOST = 'localhost'
+# EMAIL_PORT = 1025
+
+
+
+
+# Использование Redis как кэш-бэкенд
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Адрес Redis-сервера
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+#  кэширование
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 300  # Время кэширования в секундах
+CACHE_MIDDLEWARE_KEY_PREFIX = ''
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+
+# Настройки для Celery
+CELERY_BROKER_URL = 'redis://host.docker.internal:6379/0'
+CELERY_RESULT_BACKEND = 'redis://host.docker.internal:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
