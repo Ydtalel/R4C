@@ -8,19 +8,8 @@ from django.conf import settings
 from robots.models import Robot
 
 
-# def send_robot_availability_email(robot):
-#     orders = Order.objects.filter(robot_serial=robot.serial)
-#     if orders:
-#         for order in orders:
-#             subject = "Робот доступен в наличии"
-#             message = f"Добрый день!\n\nНедавно вы интересовались нашим роботом модели {robot.model}, " \
-#                       f"версии {robot.version}.\n\nЭтот робот теперь в наличии. Если вам подходит этот " \
-#                       f"вариант - пожалуйста, свяжитесь с нами."
-#             send_mail(subject, message, EMAIL_HOST_USER, [order.customer.email])
-
-
-# Отправить письмо с использованием настроек из settings.py
 def send_robot_availability_email_to_console(robot):
+    # Функция отправки письма в консоль
     orders = Order.objects.filter(robot_serial=robot.serial)
     if orders:
         for order in orders:
@@ -34,6 +23,7 @@ def send_robot_availability_email_to_console(robot):
 
 @shared_task
 def send_robot_availability_email(robot_data):
+    # Функция отправки уведомления о доступности робота по электронной почте
     robot = Robot.objects.get(id=robot_data['id'])  # Получаем объект робота по его ID
     orders = Order.objects.filter(robot_serial=robot.serial)
     if orders:

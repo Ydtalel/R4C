@@ -132,12 +132,9 @@ EMAIL_USE_SSL = True
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST = 'localhost'
 # EMAIL_PORT = 1025
-
-
 
 
 # Использование Redis как кэш-бэкенд
