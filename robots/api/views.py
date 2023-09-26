@@ -20,8 +20,7 @@ class CreateRobotView(APIView):
             if not Robot.objects.filter(model=model).exists():
                 raise ValidationError(f"Модель {model} не существует в системе.")
 
-            # Далее будет добавлена логика валидации версии и других данных
-
+            # Создание объекта робота и сериализация
             robot = Robot.objects.create(model=model, version=version, created=created)
             serializer = RobotSerializer(robot)
 
